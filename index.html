@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenStream</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ============ NAVIGATION ============ -->
+    <header class="navbar">
+        <div class="navbar-inner">
+
+            <div class="logo">
+                <span class="logo-mark">▶</span>
+                <span class="logo-text">Open<span>Stream</span></span>
+            </div>
+
+            <nav id="mainNav" class="main-nav">
+                <button class="nav-link active" data-nav="home" onclick="setActiveNav(this); showHome()">Home</button>
+                <button class="nav-link" data-nav="movies" onclick="setActiveNav(this); showMovies()">Movies</button>
+                <button class="nav-link" data-nav="comedy" onclick="setActiveNav(this); showComedy()">Comedy</button>
+                <button class="nav-link" data-nav="anime" onclick="setActiveNav(this); showAnime()">Anime</button>
+                <button class="nav-link" data-nav="documentary" onclick="setActiveNav(this); showDocumentaries()">Documentary</button>
+                <button class="nav-link" data-nav="watchlist" onclick="setActiveNav(this); showWatchlist()">My List</button>
+            </nav>
+
+            <div class="navbar-actions">
+                <button class="icon-button" id="searchToggle" aria-label="Search" onclick="toggleSearch()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+                <button class="icon-button hamburger" id="hamburgerToggle" aria-label="Menu" onclick="toggleMobileNav()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="search-panel" id="searchPanel">
+            <input type="text" id="searchInput" placeholder="Search the current section...">
+            <button class="search-go" onclick="performSearch()">Search</button>
+        </div>
+
+        <div class="mobile-nav" id="mobileNav">
+            <button class="nav-link active" data-nav="home" onclick="setActiveNav(this); showHome(); toggleMobileNav()">Home</button>
+            <button class="nav-link" data-nav="movies" onclick="setActiveNav(this); showMovies(); toggleMobileNav()">Movies</button>
+            <button class="nav-link" data-nav="comedy" onclick="setActiveNav(this); showComedy(); toggleMobileNav()">Comedy</button>
+            <button class="nav-link" data-nav="anime" onclick="setActiveNav(this); showAnime(); toggleMobileNav()">Anime</button>
+            <button class="nav-link" data-nav="documentary" onclick="setActiveNav(this); showDocumentaries(); toggleMobileNav()">Documentary</button>
+            <button class="nav-link" data-nav="watchlist" onclick="setActiveNav(this); showWatchlist(); toggleMobileNav()">My List</button>
+        </div>
+    </header>
+
+    <!-- ============ HERO (populated dynamically from the first loaded item) ============ -->
+    <section class="hero" id="hero">
+        <div class="hero-backdrop" id="heroBackdrop"></div>
+        <div class="hero-scrim"></div>
+
+        <div class="hero-content">
+            <p class="hero-eyebrow" id="heroEyebrow">Loading…</p>
+            <h1 class="hero-title" id="heroTitle">&nbsp;</h1>
+            <p class="hero-meta" id="heroMeta"></p>
+            <p class="hero-description" id="heroDescription"></p>
+
+            <div class="hero-actions">
+                <button class="hero-btn hero-btn-primary" id="heroPlayBtn" onclick="playHeroItem()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    Play
+                </button>
+                <button class="hero-btn hero-btn-icon" id="heroWatchlistBtn" onclick="toggleHeroWatchlist()" aria-label="Add to My List">
+                    <span id="heroWatchlistIcon">+</span>
+                </button>
+                <button class="hero-btn hero-btn-icon" onclick="playHeroItem()" aria-label="More info">i</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CONTENT ROW ============ -->
+    <main>
+        <section class="content-row">
+
+            <div class="row-heading">
+                <h2 id="rowTitle">Public Domain Films</h2>
+                <span id="resultCount" class="row-count"></span>
+            </div>
+
+            <div class="row-scroller-wrap">
+                <button class="row-arrow row-arrow-left" onclick="scrollRow(-1)" aria-label="Scroll left">&#10094;</button>
+
+                <div id="movieGrid" class="row-scroller">
+                    <div class="loading">Loading…</div>
+                </div>
+
+                <button class="row-arrow row-arrow-right" onclick="scrollRow(1)" aria-label="Scroll right">&#10095;</button>
+            </div>
+
+            <p class="attribution">
+                Public-domain films courtesy of the Internet Archive. Movie data
+                and trailers provided by TMDB — this product uses the TMDB API
+                but is not endorsed or certified by TMDB. Anime data and
+                trailers provided by Jikan, an unofficial MyAnimeList API.
+            </p>
+
+        </section>
+    </main>
+
+    <!-- ============ DETAIL / PLAYER MODAL ============ -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+
+            <button class="close-button" onclick="closeVideo()">✕</button>
+
+            <div class="modal-body">
+                <div class="modal-poster-col">
+                    <img id="modalPoster" class="modal-poster" alt="">
+                </div>
+
+                <div class="modal-info-col">
+                    <h2 id="videoTitle" class="modal-title"></h2>
+                    <div class="modal-meta-row" id="modalMetaRow"></div>
+                    <div class="modal-genre-row" id="modalGenreRow"></div>
+
+                    <button class="watchlist-button" id="modalWatchlistBtn" onclick="toggleModalWatchlist()">
+                        <span id="modalWatchlistIcon">+</span> <span id="modalWatchlistLabel">Add to Watchlist</span>
+                    </button>
+
+                    <p id="videoDescription" class="modal-description"></p>
+                    <a id="archiveLink" class="modal-source-link" href="#" target="_blank"></a>
+                </div>
+            </div>
+
+            <div class="modal-player">
+                <video id="videoPlayer" controls></video>
+                <iframe
+                    id="trailerFrame"
+                    style="display:none;"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
+                <div id="noVideoNotice" class="no-video-notice" style="display:none;"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p class="site-signature">(E2eL)</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
