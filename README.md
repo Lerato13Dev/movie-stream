@@ -18,9 +18,9 @@ So instead of keeping it hidden on my laptop, I decided to document the journey 
 
 ## 🌐 Live Demo
 
-🚀 **Coming soon via GitHub Pages**
+🚀 **via GitHub Pages**
 
-Once deployed, the live website will be available here.
+live: https://lerato13dev.github.io/movie-stream/
 
 ---
 
